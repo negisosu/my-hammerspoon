@@ -4,6 +4,44 @@
 
 macOS用の自動化ツール。luaスクリプトとOSを繋げてくれるツールです。
 
+## 使い方
+
+まずはHammerspoonをインストール
+
+```
+brew install hammerspoon --cask
+```
+
+コンフィグを書くためのディレクトリを用意
+
+```
+mkdir ~/.hammerspoon
+```
+
+コンフィグを書くファイルを作成
+
+```
+touch ~/.hammerspoon/init.lua
+```
+
+あとは書くだけ！自動リロードはあると便利なのでよかったらこれだけでも追加しといてください！
+
+```
+-- init.lua の自動リロード
+local function reloadConfig(files)
+    for _, file in pairs(files) do
+        if file:match("init%.lua$") then
+            hs.reload()
+            return
+        end
+    end
+end
+
+-- configの監視
+local configFileWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig)
+configFileWatcher:start()
+```
+
 ## 今使ってる自動化
 
 ### 自動リロード
