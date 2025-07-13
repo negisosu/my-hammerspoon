@@ -55,10 +55,15 @@ function mediaAuth ()
     -- mediaへの認証を実行
     local output, status = hs.execute("curl -vL -H '\''Content-Type: application/x-www-form-urlencoded'\'' -d '\''origurl=http%3a%2f%2fwww%2egoogle%2ecom&username="..username.."&password="..password.."&ok=ログイン'\'' https://metro-cit.ac.jp:9998/forms/user_login 2>&1", true)
     print(output)
+    hs.alert.defaultStyle.atScreenEdge = 1
+    hs.alert.defaultStyle.textSize = 8
+    hs.alert.show(output)
 end
 
 -- media認証の手動実行
-hs.hotkey.bind({"cmd", "shift"}, "o", mediaAuth)
+hs.hotkey.bind({"cmd", "shift"}, "o", function ()
+    hs.timer.doAfter(2, mediaAuth)
+end)
 
 -- wifiの監視の初期化
 local wifiWatcher = nil
@@ -66,7 +71,7 @@ local wifiWatcher = nil
 -- wifiが変わった時に実行する関数
 ---@diagnostic disable-next-line: lowercase-global
 function ssidChanged()
-    hs.timer.doAfter(2, mediaAuth)
+    hs.timer.doAfter(3, mediaAuth)
 end
 
 -- wifiの監視
@@ -82,7 +87,7 @@ hs.hotkey.bind({"cmd", "shift"}, "M", function ()
     hs.eventtap.keyStroke({"cmd"}, "c")
 
     -- 少し待ってから取得（コピー完了を待つ）
-    hs.timer.doAfter(0.2, function()
+    hs.timer.doAfter(0,2, function()
         local selected = hs.pasteboard.getContents()
         hs.alert.show(selected)
         print(selected)
@@ -92,6 +97,7 @@ hs.hotkey.bind({"cmd", "shift"}, "M", function ()
     end)
 end)
 
+-- bootstrapの実行
 hs.hotkey.bind({"cmd", "shift"}, "k", function ()
     hs.alert.defaultStyle.textSize = 10
     hs.alert.defaultStyle.atScreenEdge = 1
