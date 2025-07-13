@@ -25,25 +25,6 @@ end
 local configFileWatcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig)
 configFileWatcher:start()
 
--- 選択中の文字を取得
-hs.hotkey.bind({"cmd", "shift"}, "M", function ()
-    -- 直前のクリップボード内容を保存
-    local original = hs.pasteboard.getContents()
-
-    -- Cmd + C を送信（選択中の文字列をコピー）
-    hs.eventtap.keyStroke({"cmd"}, "c")
-
-    -- 少し待ってから取得（コピー完了を待つ）
-    hs.timer.doAfter(0.2, function()
-        local selected = hs.pasteboard.getContents()
-        hs.alert.show(selected)
-        print(selected)
-
-        -- クリップボードを元に戻す
-        hs.pasteboard.setContents(original)
-    end)
-end)
-
 -- mediaへの認証用関数
 ---@diagnostic disable-next-line: lowercase-global
 function mediaAuth ()
@@ -91,3 +72,29 @@ end
 -- wifiの監視
 wifiWatcher = hs.wifi.watcher.new(ssidChanged)
 wifiWatcher:start()
+
+-- 選択中の文字を取得
+hs.hotkey.bind({"cmd", "shift"}, "M", function ()
+    -- 直前のクリップボード内容を保存
+    local original = hs.pasteboard.getContents()
+
+    -- Cmd + C を送信（選択中の文字列をコピー）
+    hs.eventtap.keyStroke({"cmd"}, "c")
+
+    -- 少し待ってから取得（コピー完了を待つ）
+    hs.timer.doAfter(0.2, function()
+        local selected = hs.pasteboard.getContents()
+        hs.alert.show(selected)
+        print(selected)
+
+        -- クリップボードを元に戻す
+        hs.pasteboard.setContents(original)
+    end)
+end)
+
+hs.hotkey.bind({"cmd", "shift"}, "k", function ()
+    hs.alert.defaultStyle.textSize = 10
+    hs.alert.defaultStyle.atScreenEdge = 1
+    local output, status = hs.execute("~/dotfiles/bootstrap.sh", true)
+    hs.alert.show(output)
+end)
