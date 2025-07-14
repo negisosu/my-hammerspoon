@@ -57,6 +57,7 @@ function mediaAuth ()
     print(output)
     hs.alert.defaultStyle.atScreenEdge = 1
     hs.alert.defaultStyle.textSize = 8
+    hs.alert.defaultStyle.fadeOutDuration = 5
     hs.alert.show(output)
 end
 
